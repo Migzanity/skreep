@@ -212,4 +212,23 @@ end)
 local CloseButton = Instance.new("TextButton", BackFrame)
 CloseButton.Size = UDim2.new(0.15, 0, 0.1, 0)
 CloseButton.Text = "Kill Gui"
-CloseButton.BackgroundColor3
+CloseButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Set Close button corner radius
+local CornerClose = Instance.new("UICorner", CloseButton)
+CornerClose.CornerRadius = UDim.new(1, 0)
+
+-- Set BackFrame corner radius
+local CornerBackFrame = Instance.new("UICorner", BackFrame)
+CornerBackFrame.CornerRadius = UDim.new(0.2, 0)
+
+-- Parent ScreenGui to CoreGui
+ScreenGui.Parent = CoreGui
+
+-- Example of adding emotes (You can replace these with actual emote data)
+AddEmote("Emote 1", 1234567890, 10)
+AddEmote("Emote 2", 1234567891, 15)
+AddEmote("Emote 3", 1234567892, 20)
