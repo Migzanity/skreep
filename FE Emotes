@@ -116,4 +116,100 @@ EmoteName.AnchorPoint = Vector2.new(0.5, 0.5)
 EmoteName.Position = UDim2.new(-0.1, 0, 0.5, 0)
 EmoteName.Size = UDim2.new(0.2, 0, 0.2, 0)
 EmoteName.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-EmoteName.TextColor3
+EmoteName.TextColor3 = Color3.new(1, 1, 1)
+EmoteName.BorderSizePixel = 0
+local Corner = Instance.new("UICorner", EmoteName)
+EmoteName.Parent = BackFrame
+
+-- Loading text
+local Loading = Instance.new("TextLabel", BackFrame)
+Loading.AnchorPoint = Vector2.new(0.5, 0.5)
+Loading.Text = "Loading..."
+Loading.TextColor3 = Color3.new(1, 1, 1)
+Loading.BackgroundColor3 = Color3.new(0, 0, 0)
+Loading.TextScaled = true
+Loading.BackgroundTransparency = 0.5
+Loading.Size = UDim2.fromScale(0.2, 0.1)
+Loading.Position = UDim2.fromScale(0.5, 0.2)
+local CornerClone = Corner:Clone()
+CornerClone.Parent = Loading
+
+-- Main scrolling frame to hold emotes
+local Frame = Instance.new("ScrollingFrame", BackFrame)
+Frame.Size = UDim2.new(1, 0, 1, 0)
+Frame.CanvasSize = UDim2.new(0, 0, 0, 0)
+Frame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Frame.ScrollingDirection = Enum.ScrollingDirection.Y
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+Frame.BackgroundTransparency = 1
+Frame.ScrollBarThickness = 5
+Frame.BorderSizePixel = 0
+
+-- Grid layout for emotes
+local Grid = Instance.new("UIGridLayout", Frame)
+Grid.CellSize = UDim2.new(0.105, 0, 0, 0)
+Grid.CellPadding = UDim2.new(0.006, 0, 0.006, 0)
+Grid.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Emote sorting
+local function SortEmotes()
+    for _, Emote in pairs(Emotes) do
+        local EmoteButton = Frame:FindFirstChild(Emote.id)
+        if EmoteButton then
+            local IsFavorited = table.find(FavoritedEmotes, Emote.id)
+            EmoteButton.LayoutOrder = Emote.sort.recentfirst + ((IsFavorited and 0) or #Emotes)
+        end
+    end
+end
+
+-- Sort frame and button
+local SortFrame = Instance.new("Frame", BackFrame)
+SortFrame.Visible = false
+SortFrame.Position = UDim2.new(1, 5, -0.125, 0)
+SortFrame.Size = UDim2.new(0.2, 0, 0, 0)
+SortFrame.BackgroundTransparency = 1
+
+local SortList = Instance.new("UIListLayout", SortFrame)
+SortList.Padding = UDim.new(0.02, 0)
+SortList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local function createsort(order, text, sort)
+    local SortButton = Instance.new("TextButton", SortFrame)
+    SortButton.Size = UDim2.new(1, 0, 0.2, 0)
+    SortButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    SortButton.TextColor3 = Color3.new(1, 1, 1)
+    SortButton.Text = text
+    SortButton.TextScaled = true
+    SortButton.MouseButton1Click:Connect(function()
+        SortFrame.Visible = false
+        OpenButton.Text = "Open"
+        CurrentSort = sort
+        SortEmotes()
+    end)
+    return SortButton
+end
+
+-- Sorting options
+createsort(1, "Recently Updated First", "recentfirst")
+createsort(2, "Recently Updated Last", "recentlast")
+createsort(3, "Alphabetically First", "alphabeticfirst")
+createsort(4, "Alphabetically Last", "alphabeticlast")
+createsort(5, "Highest Price", "highestprice")
+createsort(6, "Lowest Price", "lowestprice")
+
+-- Sort button
+local SortButton = Instance.new("TextButton", BackFrame)
+SortButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+SortButton.Text = "Sort"
+SortButton.BackgroundColor3 = Color3.new(0, 0, 0)
+SortButton.MouseButton1Click:Connect(function()
+    SortFrame.Visible = not SortFrame.Visible
+    OpenButton.Text = "Open"
+end)
+
+-- Close button
+local CloseButton = Instance.new("TextButton", BackFrame)
+CloseButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+CloseButton.Text = "Kill Gui"
+CloseButton.BackgroundColor3
